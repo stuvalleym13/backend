@@ -34,3 +34,35 @@ export const register = async (req, res) => {
 export const login = async(req, res)=>{
 
 }
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .populate('blogPosts')
+      .select('-password') // Exclude sensitive fields
+      .lean(); // Better performance for read operations
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No users found',
+        users: []
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Data retrieved successfully',
+      count: users.length,
+      users: users
+    });
+
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};

@@ -1,4 +1,5 @@
 import Blog from '../modals/BlogPostModals.js';
+import User from '../modals/userModals.js';
 
 export const create = async (req, res) => {
     try {
@@ -15,6 +16,7 @@ export const create = async (req, res) => {
             isPublished
         } = req.body;
 
+        console.log(authorId)
         // Validate required fields
         if (!title || !slug || !content) {
             return res.status(400).json({
@@ -49,6 +51,14 @@ export const create = async (req, res) => {
         const savedBlog = await newBlog.save();
 
         console.log(savedBlog._id);
+
+
+        const user = await User.findById(authorId);
+        console.log(user);
+        user.blogPosts.push(savedBlog._id)
+
+        user.save();
+
 
 
         // Return success response
@@ -86,18 +96,7 @@ export const create = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
-
-
-
-// Additional controller functions you might need:
-
-export const getAll = async (req, res) => {
+export const getAllposts = async (req, res) => {
     try {
         const blogs = await Blog.find().sort({ createdAt: -1 });
         res.status(200).json({
@@ -111,6 +110,12 @@ export const getAll = async (req, res) => {
         });
     }
 };
+
+
+
+
+
+// Additional controller functions you might need:
 
 export const getBySlug = async (req, res) => {
     try {
