@@ -1,11 +1,12 @@
 import express from 'express';
 const router = express.Router();
-import { register,login, getAllUsers } from '../controllers/userController.js';
+import { register,login, getAllUsers, verifyToken } from '../controllers/userController.js';
 router.get("/",(request, response) => {
   response.send('user Routes');
 })
 router.post("/register",register);
 router.post("/login", login);
+router.post('/verify-token',verifyToken);
 router.get("/get-all-users",getAllUsers );
 router.get("/update", (req, res) => {
   res.send("Profile updated Successfully.")
@@ -13,6 +14,8 @@ router.get("/update", (req, res) => {
 // rectricted
 router.post('/create', register);
 router.put("/update", (req, res) => {
+
+  // 
   res.send("Profile updated Successfully.")
 })
 
