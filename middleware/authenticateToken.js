@@ -1,3 +1,4 @@
+import JWT from 'jsonwebtoken';
 export const authenticateToken = (req, res, next) => {
     try {
         const bearerToken = req.headers['authorization'];
