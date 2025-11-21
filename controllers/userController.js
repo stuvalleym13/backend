@@ -1,5 +1,6 @@
 import User from '../modals/userModals.js';
 import JWT from 'jsonwebtoken';
+import mongoose from 'mongoose';
 const JWT_SECREAT_KEY = '';
 
 export const register = async (req, res) => {
@@ -69,7 +70,7 @@ export const login = async (req, res) => {
             }
             if (isPasswordMatch) {
 
-                let token = JWT.sign({ firstName: user.firstName, lastName: user.lastName, email: user.email, role:user.role }, 'shhhhh');
+                let token = JWT.sign({ firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, 'shhhhh');
 
                 res.status(200).json({
                     success: true,
@@ -106,23 +107,23 @@ export const generateToken = (req, res) => {
 
 
 export const verifyToken = (req, res) => {
-  
+
     const user = req.user;
 
     console.log(user)
 
-{
+    {
 
 
 
 
 
 
-}
+    }
 
 
 
-    res.status(200).json({message:"Verification succuessfull", user});
+    res.status(200).json({ message: "Verification succuessfull", user });
 };
 
 
@@ -156,4 +157,80 @@ export const getAllUsers = async (req, res) => {
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
+};
+
+export const updateUser = async(req,res)=>{
+
+try{
+
+    const {userId, role} = req.body;
+    console.log(req.body);
+
+        if(!userId || !role){
+
+          return   res.status(400).json({message:"UserId and role rquired!"})
+        }
+
+
+        // update user data
+
+        const user = await  User.findByIdAndUpdate(userId,
+            
+            {
+                $set:{
+                    role:role
+                }
+            
+            },{new:true}
+        
+        )
+
+    res.status(200).json({message:"Updated successfully", user})
+
+
+}catch(err){
+
+
+    console.log(err)
+
+    res.status(500).json({message:"Internal Server Error", err})
+
+}
+
+}
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Check if ID is valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid User ID format" });
+    }
+
+    // Delete user
+    const deletedUser = await User.findByIdAndDelete(id);
+    // If user not found
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Success response
+    return res.status(200).json({
+      message: "User deleted successfully",
+      deletedUser,
+    });
+
+  } catch (err) {
+    console.error("Delete User Error:", err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
 };

@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { register,login, getAllUsers, verifyToken } from '../controllers/userController.js';
+import { register,login, getAllUsers, verifyToken, deleteUser, updateUser } from '../controllers/userController.js';
 
 import {authenticateToken} from '../middleware/authenticateToken.js';
 import {authorizeRoles} from '../middleware/roleMiddleware.js';
@@ -20,10 +20,8 @@ router.get("/update",authorizeRoles('author'), (req, res) => {
 })
 // rectricted
 router.post('/create', register);
-router.put("/update", (req, res) => {
+router.put("/update", updateUser)
 
-  // 
-  res.send("Profile updated Successfully.")
-})
 
+router.delete('/:id',deleteUser);
 export default router;
