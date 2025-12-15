@@ -14,7 +14,6 @@ const userSchema = new Schema({
     type: String,
     enum: ["admin", "author", "user", 'editor']
   },
-
   blogPosts: [{
     type: Schema.Types.ObjectId,
     ref: 'BlogPost'

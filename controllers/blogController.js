@@ -16,7 +16,12 @@ export const create = async (req, res) => {
             isPublished
         } = req.body;
 
-        console.log(authorId)
+
+        console.log(req.body)
+
+        console.log("user data with _id",req.user);
+
+
         // Validate required fields
         if (!title || !slug || !content) {
             return res.status(400).json({
@@ -40,7 +45,7 @@ export const create = async (req, res) => {
             slug: slug.trim(),
             content,
             excerpt: excerpt?.trim(),
-            author: author?.trim(),
+            author: author?.trim() ||'Akhilesh',
             category: category?.trim(),
             tags: Array.isArray(tags) ? tags : [],
             image: image?.trim(),
@@ -51,10 +56,8 @@ export const create = async (req, res) => {
         const savedBlog = await newBlog.save();
 
         console.log(savedBlog._id);
-
-
         const user = await User.findById(authorId);
-        console.log(user);
+        console.log("user:",user);
         user.blogPosts.push(savedBlog._id)
 
         user.save();

@@ -70,12 +70,12 @@ export const login = async (req, res) => {
             }
             if (isPasswordMatch) {
 
-                let token = JWT.sign({ firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, 'shhhhh');
+                let token = JWT.sign({ firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role, _id:user._id }, 'shhhhh');
 
                 res.status(200).json({
                     success: true,
                     message: 'Login successful',
-                    user: { firstName: user.firstName, lastName: user.lastName, email: user.email },
+                    user: { firstName: user.firstName, lastName: user.lastName, email: user.email,_id:user._id },
                     token
                 });
             }

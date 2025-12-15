@@ -1,5 +1,6 @@
 import JWT from 'jsonwebtoken';
-export const authenticateToken = (req, res, next) => {
+import User from '../modals/userModals.js';
+export const authenticateToken = async(req, res, next) => {
     try {
         const bearerToken = req.headers['authorization'];
 
@@ -23,9 +24,10 @@ export const authenticateToken = (req, res, next) => {
         const secret = process.env.JWT_SECRET || 'shhhhh';
         
         const decoded = JWT.verify(token, secret);
-        
+        // const user = await User.findOne({email:decoded.email}).select("_id");
         // Attach user data to request object for use in subsequent middleware/routes
         req.user = decoded;
+        // req.user._id=user._id;
         
         next(); // Proceed to next middleware/route handler
 
