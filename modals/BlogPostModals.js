@@ -7,6 +7,17 @@ const BlogPostSchema = new mongoose.Schema({
     excerpt: { type: String, trim: true },
     author: { type: String, trim: true },
     category: { type: String, trim: true },
+    status: { 
+        type: String, 
+        enum: ['published', 'draft', 'scheduled'],
+        default: 'draft',
+        trim: true
+    },
+    visibility:{ 
+        type: String, 
+        trim: true,
+         enum: ['public', 'members', 'private'],
+        default:'public'},
     tags: [String],
     image: { type: String, trim: true },
     isPublished: { type: Boolean, default: false },
